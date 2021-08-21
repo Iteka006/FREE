@@ -2,6 +2,9 @@ import SessionInfo from "../models/sessionModel";
 class SessionController{
     //function to register users /signup
     static SessionDetails = async(req, res)=> {
+       console.log(req.user);
+        req.body.User=req.user.id;
+
         const user = await SessionInfo.create(req.body);
         if (!user){
             return res.status(400).json({
@@ -16,7 +19,9 @@ class SessionController{
         })
     }
     static getAllSessionDetails = async (req, res)=> {
-        const users = await SessionInfo.find();
+        
+        console.log(req.user);
+        const users = await SessionInfo.find({User:req.user.id});
         if (!users){
             return res.status(404).json({
                 status: 404,
@@ -80,5 +85,54 @@ class SessionController{
 
 })
     }
+    static updateSessionStatusApproved= async(req,res)=>{
+        const finf = await SessionInfo.findById(req.params.id);
+        let status;
+        if (finf.status=="pending"){
+            status="approved";
+        }
+    else{
+        status="pending";
+    }
+    const update = await SessionInfo.findByIdAndUpdate(req.params.id,{status:status});
+    if(!update){
+        return res.status(404).json({
+            status:404,
+            message:"not changed"
+        })
+    }
+    const updated = await SessionInfo.findById(req.params.id);
+    return res.status(200).json({
+        status:200,
+        message:"success",
+        data:updated
+    })
+}
+
+static updateSessionStatusDecline = async(req,res)=>{
+    const finf = await SessionInfo.findById(req.params.id);
+    let status;
+    if(finf.status=="pending"){
+        status = "decline";
+    }
+    else{
+        status="pending";
+    }
+    const update = await SessionInfo.findByIdAndUpdate(req.params.id,{status:status});
+
+    if (!update){
+        return res.status(404).json({
+            status: 404,
+            message:"not changed"
+        })
+    }
+    const updated = await SessionInfo.findById(req.params.id);
+    return res.status(200).json({
+        status:200,
+        message:"success",
+        data:updated
+    })
+}
+
 }
 export default SessionController;
