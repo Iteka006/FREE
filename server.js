@@ -6,13 +6,15 @@ import userRouter from "./server/routes/userRoute";
 import SessionRouter from "./server/routes/sessionRoutes";
 
 import bodyParser from "body-parser";
+import cors from "cors";
 
 
 dotenv.config({path:"./.env"});
 
 const app = express();
-app.use(bodyParser.json());
 
+app.use(bodyParser.json());
+app.use(cors());
 app.use("/FREEMentor/vl/user", userRouter);
 app.use("/FREEMentor/vl/session", SessionRouter);
 app.use('/',(req, res)=>{
