@@ -20,6 +20,7 @@ const SessionSchema = new mongoose.Schema({
         type:mongoose.Schema.ObjectId, ref:'User',
         required: [true, "The Identification of the User is required"]
     },
+    
     Mentor: {
         type:mongoose.Schema.ObjectId, ref:'User',
         required: [true, "The Identification of the mentor is required"]
